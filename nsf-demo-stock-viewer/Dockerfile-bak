@@ -1,0 +1,24 @@
+FROM harbor.cloud.netease.com/library/openjdk:8-jdk-slim-bullseye
+
+# download file to dest path, and auto create depency path
+ADD http://console.service.163.org/download/nsf/nsf-boot.jar  /opt/nsf/nsf-agent.jar
+ADD http://console.service.163.org/download/napm/skywalking-napm-bin-8.5.0-latest.tar.gz /opt/apm/skywalking-napm-bin-8.5.0-latest.tar.gz
+
+
+# NSF  config
+ADD nsf-demo-stock-viewer/target/*.jar /opt/nsf/
+ADD nsf-demo-stock-viewer/nsf.yml /opt/nsf/nsf.yml
+
+
+# APM config
+RUN cd /opt/apm  && \
+tar zxvf skywalking-napm-bin-8.5.0-latest.tar.gz  && \
+echo 'agent.authentication=NTczLXd5ZGVtbw==' > skywalking-napm-bin-8.5.0-latest/agent/config/agent.config && \
+echo 'agent.service_name=wydemo-stocks-viewer' >> skywalking-napm-bin-8.5.0-latest/agent/config/agent.config && \
+echo 'collector.backend_service=apm-otel-collector.service.163.org:11800' >> skywalking-napm-bin-8.5.0-latest/agent/config/agent.config && \
+echo 'agent.sample_n_per_3_secs=10000' >> skywalking-napm-bin-8.5.0-latest/agent/config/agent.config
+
+# Run
+ADD nsf-demo-stock-viewer/run.sh  /opt/nsf/
+RUN chmod a+x /opt/nsf/run.sh
+CMD ["/opt/nsf/run.sh"]

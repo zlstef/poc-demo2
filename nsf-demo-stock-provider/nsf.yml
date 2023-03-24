@@ -1,0 +1,25 @@
+nsf:
+  type: http
+  version: '2.0'
+  nsfServer: 'http://nsf-server.service.163.org'
+  application:
+    name: wydemo-provider
+    version: v1.0.0
+    projectCode: common
+    envCode: prod
+    zone: wydemo
+    group: wydemo
+    tags: [demo,stocks]
+  authority:
+    accessKey: 4f24e24114b44792b777cf5220024408
+    secretKey: 10253ba5221a4abaa5927c078cd5eaab
+  manager:
+    patterns:
+    - className: com.netease.cloud.nsf.demo.stock.provider.web.service.impl.*
+  metric:
+    enable: true
+    custom:
+      enable: true
+      includes:
+      - 'jvm.*'
+      - '.*'
