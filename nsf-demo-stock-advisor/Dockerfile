@@ -1,4 +1,4 @@
-FROM harbor.cloud.netease.com/library/openjdk:8-jdk-slim-bullseye
+FROM openjdk:8
 
 ADD ./nsf-demo-stock-advisor/target/*.jar /opt/nsf/
 
