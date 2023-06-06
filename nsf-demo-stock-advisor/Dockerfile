@@ -1,7 +1,22 @@
 FROM harbor.cloud.netease.com/library/openjdk:8-jdk-slim-bullseye
 
-ADD nsf-demo-stock-advisor/target/*.jar /opt/nsf/
+ADD ./nsf-demo-stock-advisor/target/*.jar /opt/nsf/
 
-ADD nsf-demo-stock-advisor/run.sh  /opt/
-RUN chmod a+x /opt/run.sh
-CMD ["/opt/run.sh"]
+#add nsf agent jar and config file
+RUN mkdir -p /opt/nsf && cd /opt/nsf && \
+    wget "http://console.qz.sf.163.com/download/nsf/nsf-boot.jar" -O nsf-agent.jar
+ADD ./nsf-demo-stock-provider/nsf.yml /opt/nsf/nsf.yml
+
+#add apm agent jar and config file
+#add apm agent jar and config file
+RUN mkdir -p /opt/apm && cd /opt/apm && \
+    wget "http://console.qz.sf.163.com/download/napm/skywalking-napm-bin-8.10.0-latest.tar.gz" -O skywalking-napm-bin-8.10.0-latest.tar.gz && \
+    tar zxvf skywalking-napm-bin-8.10.0-latest.tar.gz && \
+    cd ./skywalking-napm-bin-8.10.0-latest/agent/config && \
+    echo "collector.backend_service=apm-otel-collector.qz.sf.163.com:11800" >> agent.config && \
+    echo "agent.authentication=MTgtZGVtbw==" >> agent.config && \
+    echo "agent.service_name=advisor-cicd" >> agent.config
+
+ADD ./nsf-demo-stock-advisor/run.sh  /opt/nsf/
+RUN chmod a+x /opt/nsf/run.sh
+CMD ["/opt/nsf/run.sh"]
