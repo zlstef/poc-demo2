@@ -2,9 +2,9 @@ nsf:
   type: http
   nsfServer: 'http://nsf-server.qz.sf.163.com'
   application:
-    name: advisor-v3
-    version: 0.0.3
-    projectCode: common
+    name: advisor-cicd
+    version: 0.0.1
+    projectCode: poc
     envCode: prod
     mark: ""
     group: default
